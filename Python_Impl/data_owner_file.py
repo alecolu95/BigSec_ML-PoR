@@ -24,3 +24,27 @@ class Data_Owner:
         beta = random.getrandbits(random_size)
 
         #hash file
+
+        #randomize hash for key server
+        pow(self.G.gen1(),alpha)
+
+        #key server signing
+
+        #remove key server randomization
+        (ks_first_pk, ks_second_pk) = self.keyserver.get_public_key_pair()
+        pow(ks_first_pk,-alpha)
+
+        #verify with bilinear pairing
+
+        #add new randomization for cloud
+        pow(self.G.gen1(),beta)
+
+        #cloud signing
+
+        #remove cloud randomization
+        (c_first_pk, c_second_pk) = self.cloud.get_public_key_pair()
+        pow(c_first_pk,-beta)
+
+        #verify with bilinear pairing
+
+
