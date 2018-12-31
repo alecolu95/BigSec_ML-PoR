@@ -13,7 +13,7 @@ class Cloud:
         """
         #generate private key
         self.private_key = random.getrandbits(sk_size)
-        self.public_key_pair = (pow(generator_g1,self.private_key),pow(generator_g2,self.private_key))
+        self.public_key_pair = (generator_g1.exp(self.private_key),generator_g2.exp(self.private_key))
 
     def get_public_key_pair(self):
         """

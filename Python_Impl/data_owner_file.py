@@ -37,18 +37,22 @@ class Data_Owner:
         s = signed_randomized_h * pow(ks_first_pk,-alpha)
 
         #verify with bilinear pairing
+        if self.G.pair(s,self.G.gen2()).eq(self.G.pair(h,ks_second_pk)):
 
-        #add new randomization for cloud
-        s_randomized = s*pow(self.G.gen1(),beta)
+            #add new randomization for cloud
+            s_randomized = s*pow(self.G.gen1(),beta)
 
-        #cloud signing
-        s_randomized_signed = self.cloud.sign_hash(s_randomized)
+            #cloud signing
+            s_randomized_signed = self.cloud.sign_hash(s_randomized)
 
-        #remove cloud randomization
-        (c_first_pk, c_second_pk) = self.cloud.get_public_key_pair()
-        c = s_randomized_signed*pow(c_first_pk,-beta)
+            #remove cloud randomization
+            (c_first_pk, c_second_pk) = self.cloud.get_public_key_pair()
+            c = s_randomized_signed*pow(c_first_pk,-beta)
 
-        #verify with bilinear pairing
+            #verify with bilinear pairing
+
+        else:
+            raise ValueError("Signing failed.")
 
 
 
