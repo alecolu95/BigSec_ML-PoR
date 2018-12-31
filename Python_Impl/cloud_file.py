@@ -21,3 +21,11 @@ class Cloud:
         :return: public key pair
         """
         return self.public_key_pair
+
+    def sign_hash(self, hash):
+        """
+        signs the randomized hash
+        :param hash: hash
+        :return: signed randomized hash
+        """
+        return pow(hash,self.private_key)

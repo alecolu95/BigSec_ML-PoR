@@ -19,32 +19,38 @@ class Data_Owner:
         self.keyserver = Keyserver(self.G.gen1(),self.G.gen2())
 
 
-    def gen_key(self,file):
+    def gen_key(self):
         alpha = random.getrandbits(random_size)
         beta = random.getrandbits(random_size)
 
         #hash file
+        h = self.G.hashG1(b"Hello")
 
         #randomize hash for key server
-        pow(self.G.gen1(),alpha)
+        h_randomized = h*pow(self.G.gen1(),alpha)
 
         #key server signing
+        signed_randomized_h = self.keyserver.sign_hash(h_randomized)
 
         #remove key server randomization
         (ks_first_pk, ks_second_pk) = self.keyserver.get_public_key_pair()
-        pow(ks_first_pk,-alpha)
+        s = signed_randomized_h * pow(ks_first_pk,-alpha)
 
         #verify with bilinear pairing
 
         #add new randomization for cloud
-        pow(self.G.gen1(),beta)
+        s_randomized = s*pow(self.G.gen1(),beta)
 
         #cloud signing
+        s_randomized_signed = self.cloud.sign_hash(s_randomized)
 
         #remove cloud randomization
         (c_first_pk, c_second_pk) = self.cloud.get_public_key_pair()
-        pow(c_first_pk,-beta)
+        c = s_randomized_signed*pow(c_first_pk,-beta)
 
         #verify with bilinear pairing
 
 
+
+d = Data_Owner()
+d.gen_key()
