@@ -1,6 +1,6 @@
 # BigSec - Message-Locked Proofs of Retrievability with Secure Deduplication
 
-##Team:
+## Team:
 - Colucci Alessandro
 - Convertini Pasquale
 - Möllering Helen
