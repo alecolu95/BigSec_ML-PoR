@@ -1,7 +1,8 @@
-#include "data_owner.h"
 #include "cloud_server.h"
 #include "key_server.h"
 
+#include <pbc.h>
+#include <math.h>
 #include <stdio.h>
 
 #define tau 256 	// security param, hash func
@@ -11,9 +12,9 @@ int main(){
 	// G init
 	// ...
 	// CS init
-	CS* cs = CS_init(g1, g2); ///TODO
+	CS* cs = CS_init(g1, g2); ///TODO params!
 	// KS init
-	KS* ks = KS_init(g1, g2); ///TODO
+	KS* ks = KS_init(g1, g2); ///TODO params!
 
 
 	// gen key
