@@ -31,7 +31,9 @@ If something is not working, try to run:
 ```
 sudo ldconfig
 ```
-
+> Sources:
+> - https://www.ubuntuupdates.org/package/core/precise/universe/base/libgmp3c2
+> - http://voltar.org/pbcfiles/
 
 ## SHA Library
 To install the openssl/sha.h library, follow this instructions into the lib/openssl folder:
