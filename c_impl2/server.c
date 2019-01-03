@@ -1,28 +1,44 @@
 #include "server.h"
-#include <pbc.h>
+//#include <pbc.h>	//comment if already included into server.h
 #include <math.h>
 
 #define sk_sike 50
 
+//in .h: typedef struct key_pair KP;
+
 struct server_struct {
 	element_t private_key;
-	pairing_t/*TODO check type !!!!! */ public_key_pair;
-};
+	KP *public_kp;
+}; //typedef S;
 
 
-server* S_init(element_t/*TODO generator type*/ g1, element_t/*TODO..*/ g2){
+S* S_init(/*TODO g1,g2 ?*/pairing_t pairing){
+	// init
 	S* s = (S*) malloc(sizeof(S));
+	s->public_kp = (KP*) malloc(sizeof(KP));
 
-	s->private_key = ; //TODO random bytes
-	s->public_key_pair = ; //TODO (g1,g2)
+	// (g1,g2)
+	element_init_G1(s->public_kp->first, pairing);
+	element_init_G2(s->public_kp->second, pairing);
+	// private key
+	element_init_Zr(s->private_key, pairing);
+
+	// assign random values
+	element_random(s->public_kp->first);
+	element_random(s->public_kp->second);
+	element_random(s->private_key);
 
 	return s;
 }
 
-/*key pair type*/ get_public_key_pair(S* s){
-	return s->public_key_pair;
+KP* get_public_key_pair(S* s){
+	return s->public_kp;
 }
 
-char* /*TODO check type*/ sign_hash(S* s, char*/*TODO check type*/ hash){
-	return pow(hash, s->private_key);
+// TODO check pointer return !
+element_t* sign_hash(S* s, element_t hash){
+	element_t *signed_h = (element_t*) malloc(sizeof(element_t));
+	element_init_same_as(*signed_h, hash);	// copy hash into signed_h
+	element_pow_zn(*signed_h, hash, s->private_key);
+	return signed_h;
 }

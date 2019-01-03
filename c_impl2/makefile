@@ -1,5 +1,5 @@
 default:
-	gcc -o ml_por *.c -L. -lpbc -lgmp
+	gcc -o ml_por *.c -L. -lpbc -lgmp -lssl -lcrypto
 do_build:
 	gcc data_owner.c -L. -lpbc -lgmp
 s_build:

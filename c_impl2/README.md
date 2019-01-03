@@ -1,4 +1,6 @@
 # INSTALLATION
+
+## PBC Library
 To install the pbc.h library, follow this instructions into the lib/gmp folder:
 
 ```
@@ -11,8 +13,21 @@ WARNING: the last command could require to be run with admin privileges (sudo ma
 > Source: https://crypto.stanford.edu/pbc/manual/ch01.html
 
 
-## ERROR: no pbc.h file
+### ERROR: no pbc.h file
 
 Copy all the files in "all_pbc_files" folder into /usr/local/include.
 
 > Source: https://github.com/blynn/pbc/tree/master/include
+
+## SHA Library
+To install the openssl/sha.h library, follow this instructions into the lib/openssl folder:
+
+```
+./config
+make
+make test
+make install
+```
+
+WARNING: the last command could require to be run with admin privileges (sudo make install).
+> Source: https://github.com/openssl/openssl

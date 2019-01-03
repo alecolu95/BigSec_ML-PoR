@@ -1,5 +1,10 @@
-typedef struct server_struct server;
+#include <pbc.h>
 
-server* S_init(element_t/*TODO generator type*/ g1, element_t/*TODO..*/ g2);
-/*key pair type*/ get_public_key_pair(S* s);
-char*/*TODO check type*/ sign_hash(S* s, char*/*TODO check type*/ hash);
+typedef struct key_pair {
+        element_t first, second;
+} KP;
+typedef struct server_struct S;
+
+S* S_init(/*g1,g2*/pairing_t pairing);
+KP* get_public_key_pair(S* s);
+element_t* sign_hash(S* s, element_t hash);
