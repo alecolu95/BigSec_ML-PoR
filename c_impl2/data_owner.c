@@ -102,16 +102,17 @@ int main(){
 	element_from_hash(h, hashed_msg, 256); //no. bytes of hashed_msg -> SHA256: 256 fixed length
 
 	// blind signature with alpha
-	signed_h = *element_blind(h, gr1, alpha);
+	element_set(signed_h, *element_blind(h, gr1, alpha));
 	// sign by KS
-	element_t s_signed = *sign_hash(ks, signed_h);
+	element_t s_signed;
+	element_set(signed_h, *sign_hash(ks, signed_h));
 
 	// unblind to derive signature
 	KP *ks_key_pair = get_public_key_pair(ks);
 	element_t s;
 	element_init_same_as(s, s_signed);
 	element_neg(alpha, alpha);		// alpha = -alpha
-	s = *element_blind(s_signed, ks_key_pair->first, alpha);
+	element_set(s, *element_blind(s_signed, ks_key_pair->first, alpha));
 
 	// check signature
 	pairing_apply(temp1, s, gr2, pairing);
@@ -121,19 +122,19 @@ int main(){
 	        element_t s_tilde;
 		element_init_same_as(s_tilde, s);
 		element_random(gr1);		// new random value
-		s_tilde = *element_blind(s, gr1, beta);
+		element_set(s_tilde, *element_blind(s, gr1, beta));
 
 		// sign by CS
 		element_t c_tilde;
 //		element_init_same_as(c,s_tilde);
-		c_tilde = *sign_hash(cs, s_tilde);
+		element_set(c_tilde, *sign_hash(cs, s_tilde));
 
 		// unblind to derive signature
 		KP *cs_key_pair = get_public_key_pair(cs);
 	        element_t c;
         	element_init_same_as(c, c_tilde);
        		element_neg(beta, beta);              // beta = -beta
-        	c = *element_blind(c_tilde, cs_key_pair->first, beta);
+        	element_set(c, *element_blind(c_tilde, cs_key_pair->first, beta));
 
 		// check signature
 //		element_random(g2);
