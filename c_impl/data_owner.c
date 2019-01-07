@@ -29,7 +29,7 @@ printf("servers init\n");
 	// KS init
 	S* ks = S_init(/*g1, g2*/pairing); ///TODO params!
 
-
+printf("servers ok\n");
 
 
 
