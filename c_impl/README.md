@@ -35,6 +35,10 @@ sudo ldconfig
 > - https://www.ubuntuupdates.org/package/core/precise/universe/base/libgmp3c2
 > - http://voltar.org/pbcfiles/
 
+#### Library dependencies problem
+Link for all older gmp's versions:
+> https://ftp.gnu.org/gnu/gmp/
+
 ## SHA Library
 To install the openssl/sha.h library, follow this instructions into the lib/openssl folder:
 

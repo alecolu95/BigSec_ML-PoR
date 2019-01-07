@@ -23,10 +23,12 @@ printf("G init\n");
 	size_t count = fread(param, 1, 1024, stdin);
 	if (!count) pbc_die("input error");
 	pairing_init_set_buf(pairing, param, count);
-printf("servers init\n");
+printf("servers init:\n");
 	// CS init
+printf("- CS:\n");
 	S* cs = S_init(/*g1, g2*/pairing); ///TODO params!
 	// KS init
+printf("- KS:\n");
 	S* ks = S_init(/*g1, g2*/pairing); ///TODO params!
 
 printf("servers ok\n");

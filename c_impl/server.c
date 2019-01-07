@@ -13,22 +13,22 @@ struct server_struct {
 
 
 S* S_init(/*TODO g1,g2 ?*/pairing_t pairing){
-printf("S: alloc\n");
+printf("\tS: alloc\n");
 	// init
 	S* s = (S*) malloc(sizeof(S));
 	s->public_kp = (KP*) malloc(sizeof(KP));
-printf("S: elems init\n");
+printf("\tS: elems init\n");
 	// (g1,g2)
 	element_init_G1(s->public_kp->first, pairing);
 	element_init_G2(s->public_kp->second, pairing);
 	// private key
 	element_init_Zr(s->private_key, pairing);
-printf("S: elems random\n");
+printf("\tS: elems random\n");
 	// assign random values
 	element_random(s->public_kp->first);
 	element_random(s->public_kp->second);
 	element_random(s->private_key);
-printf("S: init complete, returning pointer.\n");
+printf("\tS: init complete, returning pointer.\n\n");
 	return s;
 }
 
