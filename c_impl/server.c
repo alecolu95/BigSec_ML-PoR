@@ -12,23 +12,26 @@ struct server_struct {
 }; //typedef S;
 
 
-S* S_init(/*TODO g1,g2 ?*/pairing_t pairing){
-printf("\tS: alloc\n");
+S* S_init(pairing_t pairing, element_t g1, element_t g2){
+//printf("\tS: alloc\n");
 	// init
 	S* s = (S*) malloc(sizeof(S));
 	s->public_kp = (KP*) malloc(sizeof(KP));
-printf("\tS: elems init\n");
+//printf("\tS: elems init\n");
 	// (g1,g2)
 	element_init_G1(s->public_kp->first, pairing);
 	element_init_G2(s->public_kp->second, pairing);
 	// private key
 	element_init_Zr(s->private_key, pairing);
-printf("\tS: elems random\n");
-	// assign random values
-	element_random(s->public_kp->first);
-	element_random(s->public_kp->second);
+//printf("\tS: generating private key\n");
+	// assign random value
 	element_random(s->private_key);
-printf("\tS: init complete, returning pointer.\n\n");
+
+//printf("\tS: generating public keys\n");
+	element_pow_zn(s->public_kp->first, g1, s->private_key);
+	element_pow_zn(s->public_kp->second, g2, s->private_key);
+
+//printf("\tS: init complete, returning pointer.\n\n");
 	return s;
 }
 
@@ -42,4 +45,11 @@ element_t* sign_hash(S* s, element_t hash){
 	element_init_same_as(*signed_h, hash);	// copy hash into signed_h
 	element_pow_zn(*signed_h, hash, s->private_key);
 	return signed_h;
+}
+
+void server_free(S* s){
+	element_clear(s->private_key);
+	element_clear(s->public_kp->first);
+	element_clear(s->public_kp->second);
+	free(s->public_kp);
 }

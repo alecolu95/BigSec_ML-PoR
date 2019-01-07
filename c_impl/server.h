@@ -5,6 +5,7 @@ typedef struct key_pair {
 } KP;
 typedef struct server_struct S;
 
-S* S_init(/*g1,g2*/pairing_t pairing);
+S* S_init(pairing_t pairing, element_t g1, element_t g2);
 KP* get_public_key_pair(S* s);
 element_t* sign_hash(S* s, element_t hash);
+void server_free(S* s);

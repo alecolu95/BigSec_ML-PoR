@@ -13,80 +13,50 @@ element_t *element_blind(element_t param1, element_t base, element_t exp);
 
 int main(){
 	// msg/file to be hashed
-printf("computing sha256\n");
+printf("Computing hash (SHA256).. ");
 	char msg[20] = "Hello";
 	unsigned char *hashed_msg = SHA256(msg, strlen(msg), 0);
-printf("G init\n");
+printf("Done.\nPairing initialization.. ");
 	// G init
 	pairing_t pairing;
 	char param[1024];
 	size_t count = fread(param, 1, 1024, stdin);
 	if (!count) pbc_die("input error");
 	pairing_init_set_buf(pairing, param, count);
-printf("servers init:\n");
-	// CS init
-printf("- CS:\n");
-	S* cs = S_init(/*g1, g2*/pairing); ///TODO params!
+
+printf("Done.\nChoosing random generators g1 and g2.. ");
+	element_t gr1, gr2;
+	element_init_G1(gr1, pairing);
+	element_init_G2(gr2, pairing);
+	element_random(gr1);
+	element_random(gr2);
+
+printf("Done.\n\nServers initialization:\n");
 	// KS init
-printf("- KS:\n");
-	S* ks = S_init(/*g1, g2*/pairing); ///TODO params!
+printf("- KS: ");
+	S* ks = S_init(pairing, gr1, gr2); ///TODO params!
+	// CS init
+printf("Done.\n- CS: ");
+	S* cs = S_init(pairing, gr1, gr2); ///TODO params!
 
-printf("servers ok\n");
-
-
-
-/*
-	// gen key
-	/*random bytes* / alpha, beta; //TODO
-
-	// hash file
-	/*TODO type* / h = ; //TODO
-
-	// randomize hash for KS
-	/*TODO type* / h_randomized = h * pow(gen1(), alpha);
-
-	// KS signing
-	/*TODO type* / signed_randomized_h = sign_hash(ks, h_randomized);
-
-	// remove KS randomization
-	/*TODO type* / ks_pair = get_public_key_pair(ks); //TODO struct with field "first" and "second"
-	/*TODO type* / s = signed_randomized_h * pow(ks_pair.first, alpha);
-
-	// verify with bilinear pairing
-	if (/* G.pair(s, gen2()) == G.pair(h, ks_pair.second) * /){ //TODO
-		// add new randomization for CS
-		/*TODO type* / s_randomized = s * pow(gen1(), beta); //TODO
-
-		// CS signing
-		/*TODO type* / s_randomized_signed = sign_hash(cs, s_randomized);
-
-		//remove CS randomization
-		/*TODO type* / cs_pair = get_public_key_pair(cs); //TODO struct cs_pair -> first,second
-		/*TODO type* / c = s_randomized_signed * pow(cs_pair.first, -beta);
-
-		// verify with bilinear pairing
-		// ... TODO missing on python implementation
-	}
-	else {
-		fprintf(stderr,"Signing failed.");
-		return -1;
-	}
-*/
+printf("Done.\n\n");
 
 
 /******************************* LIB SOL. ***********************************/
-printf("elements init\n");
-	element_t gr1, gr2, h;
+printf("Initialization phase.. ");
+	element_t /*gr1, gr2, */h;
 	element_t public_key, secret_key;
 	element_t signed_h;
 	element_t temp1, temp2;
 // ==================================
 	element_t alpha, beta;
 // ==================================
+	element_t s_signed, s, s_tilde, c_tilde, c;
+// ==================================
 
-	element_init_G2(gr2, pairing);
+//	element_init_G2(gr2, pairing);
 	element_init_G2(public_key, pairing);
-	element_init_G1(gr1, pairing);
+//	element_init_G1(gr1, pairing);
 	element_init_G1(h, pairing);
 	element_init_G1(signed_h, pairing);
 	element_init_GT(temp1, pairing);
@@ -96,73 +66,97 @@ printf("elements init\n");
 	element_init_Zr(alpha, pairing);
 	element_init_Zr(beta, pairing);
 // ==================================
-printf("elements random\n");
-	element_random(gr1);
-	element_random(gr2);
+//printf("elements random\n");
+//	element_random(gr1);
+//	element_random(gr2);
 	element_random(alpha);
 	element_random(beta);
 
-printf("\n---\nSTARTING PROTOCOL..\n");
+printf("Done.\n=================================================\nSTARTING PROTOCOL..\n");
 	// hash msg
+//printf("from hash\n");
 	element_from_hash(h, hashed_msg, 256); //no. bytes of hashed_msg -> SHA256: 256 fixed length
-
+printf("Blinding hash with random value alpha.. ");
 	// blind signature with alpha
 	element_set(signed_h, *element_blind(h, gr1, alpha));
-	// sign by KS
-	element_t s_signed;
-	element_set(signed_h, *sign_hash(ks, signed_h));
 
+printf("Done.\n\nKS signature.. ");
+	// sign by KS
+	// TODO if something doesn't work here, remove s_signed and change it with signed_h
+	element_init_same_as(s_signed, signed_h);
+	element_set(s_signed, *sign_hash(ks, signed_h));
+
+printf("Done.\nUnblinding with alpha.. ");
 	// unblind to derive signature
 	KP *ks_key_pair = get_public_key_pair(ks);
-	element_t s;
+//printf("init same\n");
 	element_init_same_as(s, s_signed);
+//printf("neg\n");
 	element_neg(alpha, alpha);		// alpha = -alpha
+//printf("element_set with *element_blind()\n");
 	element_set(s, *element_blind(s_signed, ks_key_pair->first, alpha));
-
+printf("Done.\n\nVerificating signature.. ");
 	// check signature
 	pairing_apply(temp1, s, gr2, pairing);
 	pairing_apply(temp2, h, ks_key_pair->second, pairing);
 	if(!element_cmp(temp1, temp2)){		// signature verified
+printf("OK!\n\nBlinding signature with random value beta.. ");
 		// blind signature with beta
-	        element_t s_tilde;
 		element_init_same_as(s_tilde, s);
-		element_random(gr1);		// new random value
+//		element_random(gr1);		// new random value
 		element_set(s_tilde, *element_blind(s, gr1, beta));
 
+printf("Done.\n\nCS signature.. ");
 		// sign by CS
-		element_t c_tilde;
-//		element_init_same_as(c,s_tilde);
+		element_init_same_as(c_tilde, s_tilde);
 		element_set(c_tilde, *sign_hash(cs, s_tilde));
 
+printf("Done.\nUnblinding with beta.. ");
 		// unblind to derive signature
 		KP *cs_key_pair = get_public_key_pair(cs);
-	        element_t c;
         	element_init_same_as(c, c_tilde);
        		element_neg(beta, beta);              // beta = -beta
         	element_set(c, *element_blind(c_tilde, cs_key_pair->first, beta));
 
+printf("Done.\n\nVerificating signature.. ");
 		// check signature
 //		element_random(g2);
-	        pairing_apply(temp1, s, gr2, pairing);
-	        pairing_apply(temp2, h, cs_key_pair->second, pairing);
+	        pairing_apply(temp1, c, gr2, pairing);
+	        pairing_apply(temp2, s, cs_key_pair->second, pairing);
 	        if(!element_cmp(temp1, temp2)){         // signature verified
-			printf("Signatures verified!");
+			printf("OK!\n\n=====================\nSignatures verified!\n=====================\n");
 		}
 		else {
-			printf("CS-signature doesn't match!");
+			printf("CS-signature doesn't match!\n");
 		}
 
-		// free all allocated resources in this context
-		// ...
+		// free all allocated resources in this context: s_tilde, c_tilde, c
+		element_clear(s_tilde);
+                element_clear(c_tilde);
+                element_clear(c);
 	}
 	else {
-		printf("KS-signature doesn't match!");
+		printf("KS-signature doesn't match!\n");
 	}
-
+printf("\nClearing memory...");
 	//free all allocated resources
 	element_clear(gr1);
-	//.....
+	element_clear(gr2);
+        element_clear(h);
+	element_clear(public_key);
+	element_clear(secret_key);
+	element_clear(signed_h);
+	element_clear(temp1);
+	element_clear(temp2);
+	element_clear(alpha);
+	element_clear(beta);
+	element_clear(s_signed);
+	element_clear(s);
 
+	server_free(ks);
+	server_free(cs);
+
+printf("Done.\n\nEnd of the program.\n");
 	return 0;
 }
 
