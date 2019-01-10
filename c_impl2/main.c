@@ -11,9 +11,9 @@ int main(int argc, char* argv[]){
 	char* param = argv[1];
 	printf("Param file is: %s\n\n", param);
 
-	printf("************************************************************\nSubmitting Kf1..\n");
+	printf("************************************************************\nDO1: Submitting file and getting Kf1..\n");
 	char* Kf1 = DO_submit_file("test_file.txt", param); // user 1
-	printf("\n************************************************************\nSubmitting Kf2..\n");
+	printf("\n************************************************************\nDO2: Submitting file and getting Kf2..\n");
 	char* Kf2 = DO_submit_file("test_file.txt", param); // user 2
 
 	printf("\n************************************************************\n");
