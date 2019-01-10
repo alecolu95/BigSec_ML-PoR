@@ -3,6 +3,15 @@
 #include <string.h>
 #include <stdio.h>
 
+
+
+
+#include <assert.h>
+#include <pbc.h>
+
+
+
+
 void print_hex(char* string);
 
 int main(int argc, char* argv[]){
@@ -15,12 +24,54 @@ int main(int argc, char* argv[]){
 	printf("\nParam file is: %s\n\n", param);
 
 	printf("******************************************\nDO1: Submitting file and getting Kf1..\n");
-	char* Kf1 = DO_submit_file("test_file.txt", param); // user 1
+	char* Kf1;// = DO_submit_file("test_file.txt", param); // user 1
+	DO_submit_file("test_file.txt", param, Kf1);
+
 	printf("\n******************************************\nDO2: Submitting file and getting Kf2..\n");
-	char* Kf2 = DO_submit_file("test_file.txt", param); // user 2
+	char* Kf2;// = DO_submit_file("test_file.txt", param); // user 2
+	DO_submit_file("test_file.txt", param, Kf2);
 
 	printf("\n******************************************\n\n");
 	printf("================================\nComparing keys..\n");
+
+
+
+
+
+
+/****************************************************/
+	// G init
+	pairing_t pairing;
+	char param_buf[1024];
+	FILE* param_fp = fopen(param, "r");
+	assert(param_fp != NULL);
+	size_t count = fread(param_buf, 1, 1024, /*stdin*/param_fp);
+	fclose(param_fp);
+
+	if (!count) pbc_die("input error");
+	pairing_init_set_buf(pairing, param_buf, count);
+
+	element_t key1, key2;
+	element_init_G1(key1, pairing);
+	element_init_G1(key2, pairing);
+	element_from_bytes(key1, Kf1);
+	element_from_bytes(key2, Kf2);
+
+	element_printf("element1: %B\n", key1);
+	element_printf("element2: %B\n", key2);
+/****************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// Base64 format
 /*	size_t* size;

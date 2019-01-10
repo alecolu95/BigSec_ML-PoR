@@ -17,7 +17,7 @@ char* my_read_file(char* filename);
 // TODO for debug purpose
 void print_hex2(char* string);
 
-char* DO_submit_file(char *filename, char* param_file){
+char* DO_submit_file(char *filename, char* param_file, char* res_bytes){
 	// success or fail flag
 	int success = 0;
 	unsigned char* res;
@@ -194,6 +194,8 @@ printf("Verifing CS signature.. ");
 		printf("\nhash: ");
 		print_hex2(SHA256(res, strlen(res), 0));
 		printf("\n--------\n");
+
+		res_bytes = SHA256(res, strlen(res), 0);
 
 		return SHA256(res, strlen(res), 0);
 	} else {

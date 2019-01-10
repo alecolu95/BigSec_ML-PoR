@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
 	print_hex(Kf2);
 
 	// compare keys
-	if(!strcmp(Kf1, Kf2)){//if(!strncmp(Kf1, Kf2, strlen(Kf1))){
+	if(!strncmp(Kf1, Kf2, strlen(Kf1))){
 		printf("Keys are equal!\n");
 	} else{
 		printf("Keys are different!\n");
