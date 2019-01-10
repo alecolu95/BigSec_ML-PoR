@@ -187,7 +187,7 @@ printf("\nClearing memory...");
 }
 
 // TODO check pointer return !
-element_t *element_blind(element_t param1, element_t base, element_t exp){
+element_t* element_blind(element_t param1, element_t base, element_t exp){
 	element_t *res = (element_t*) malloc(sizeof(element_t));
 	element_init_same_as(*res,param1);
 	element_pow_zn(*res, base, exp);
