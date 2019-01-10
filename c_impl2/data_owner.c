@@ -15,7 +15,7 @@ element_t* element_blind(element_t param1, element_t base, element_t exp);
 char* my_read_file(char* filename);
 
 
-char* DO_submit_file(char *filename){
+char* DO_submit_file(char *filename, char* param_file){
 	// success or fail flag
 	int success = 0;
 	unsigned char* res;
@@ -30,7 +30,12 @@ printf("Done.\nPairing initialization.. ");
 	// G init
 	pairing_t pairing;
 	char param[1024];
-	size_t count = fread(param, 1, 1024, stdin);
+
+	FILE* param_fp = fopen(param_file, "r");
+	assert(param_fp != NULL);
+
+	size_t count = fread(param, 1, 1024, /*stdin*/param_fp);
+	fclose(param_fp);
 	if (!count) pbc_die("input error");
 	pairing_init_set_buf(pairing, param, count);
 
@@ -104,6 +109,7 @@ printf("Done.\nUnblinding with alpha.. ");
 //printf("neg\n");
 	element_neg(alpha, alpha);		// alpha = -alpha
 //printf("element_set with *element_blind()\n");
+//	element_init_same_as(s_signed, s);	// TODO added for debugging.. needed?
 	element_set(s, *element_blind(s_signed, ks_key_pair->first, alpha));
 printf("Done.\n\nVerificating signature.. ");
 	// check signature
@@ -174,7 +180,7 @@ printf("\nClearing memory...");
 	server_free(ks);
 	server_free(cs);
 
-	free(msg);
+//	free(msg);
 
 	printf("Done.\n\nEnd of the program.\n");
 
@@ -195,30 +201,37 @@ element_t* element_blind(element_t param1, element_t base, element_t exp){
 	return res;
 }
 
-int my_get_file_size(char* filename){
-	FILE* fp = fopen(filename, "r");
+int my_get_file_size(FILE* fp){//char* filename){
+//	FILE* fp = fopen(filename, "r");
 	assert(fp != NULL);
 	fseek(fp, 0, SEEK_END);	// seek to end of file
 	int res = ftell(fp);	// get current file pointer
-//	fseek(fp, 0, SEEK_SET);	// seek back to beginning of file
-	fclose(fp);
+	fseek(fp, 0, SEEK_SET);	// seek back to beginning of file
+//	fclose(fp);
 	return res;
 }
 
 char* my_read_file(char* filename){
-	int file_size = my_get_file_size(filename);
+/*	int file_size = my_get_file_size(filename);
 	char* content = (char*) malloc(file_size*sizeof(char));
 	char* line = (char*) malloc(LINE_SIZE*sizeof(char));
-
+*/
 	FILE* fp = fopen(filename, "r");
 	assert(fp != NULL);
-	while(!feof(fp)){
-		fgets(line, LINE_SIZE, fp);
-		strncat(content, line, LINE_SIZE);
+
+	int file_size = my_get_file_size(fp);//filename);
+	printf("File size is: %d\n", file_size);
+        char* content = (char*) malloc(file_size*sizeof(char));
+        char* line = (char*) malloc(LINE_SIZE*sizeof(char));
+
+//	while(!feof(fp)){
+while(		fgets(line, LINE_SIZE, fp) != NULL){//;
+		printf("Line length is: %d\n", (int) strlen(line));
+		strncat(content, line, strlen(line));//LINE_SIZE);
 	}
 	fclose(fp);
 
 	free(line);
+printf("returning file content\n");
 	return content;
-
 }
