@@ -235,7 +235,9 @@ char* my_read_file(char* filename){
         char* content = (char*) malloc(file_size*sizeof(char));
         char* line = (char*) malloc(LINE_SIZE*sizeof(char));
 
-while(fgets(line, LINE_SIZE, fp) != NULL){
+	content[0] = '\0';
+
+	while(fgets(line, LINE_SIZE, fp) != NULL){
 		//printf("Line length is: %d\n", (int) strlen(line));
 		strncat(content, line, strlen(line));//LINE_SIZE);
 	}

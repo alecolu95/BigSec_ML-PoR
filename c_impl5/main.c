@@ -67,7 +67,7 @@ int main(int argc, char* argv[]){
 void print_hex(char* string){
 	int i;
 	for (i = 0; i < strlen(string); i++) {
-		printf("%02x", string[i]);
+		printf("%02x", (uint8_t)string[i]);
 	}
 	printf("\n");
 }
