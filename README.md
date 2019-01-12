@@ -8,7 +8,7 @@
 
 ## INSTALLATION
 ### Introduction
-All the needed libraries are located into the lib folder:
+All the needed libraries are located into the **lib** folder:
 - PBC: Pairing-Based Cryptography library, main lib for the implementation of the protocol;
 - GMP: GNU  Multiple  Precision  Arithmetic library, on which PBC relies;
 - OpenSSL: using the hashing functions (SHA256 in particular).
@@ -40,7 +40,7 @@ sudo ldconfig
 Once you are done, everything should be ready.
 
 #### Error solving
-In case you get an error using the PBC library, try to copy the files in lib/all_pbc_files into /usr/local/include.
+In case you get an error using the PBC library, try to copy the files from ***lib/all_pbc_files*** into ***/usr/local/include***.
 If still not working, try to run again:
 ```
 sudo ldconfig
@@ -49,9 +49,12 @@ sudo ldconfig
 > Source: https://github.com/blynn/pbc/tree/master/include
 
 #### Library dependencies problem
-Link for all older gmp's versions:
+We encountered a problem installing the latest version of gmp, conflicting with the one pbc requires.
+We used the **gmp-4.3.1**, already in the ***lib*** folder.
 
-> https://ftp.gnu.org/gnu/gmp/
+> Link for all older gmp's versions: https://ftp.gnu.org/gnu/gmp
+
+ https://ftp.gnu.org/gnu/gmp
 
 
 ## Implementation
