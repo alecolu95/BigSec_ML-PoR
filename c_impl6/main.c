@@ -32,14 +32,16 @@ int main(int argc, char* argv[]){
 	printf("******************************************\nDO1: Submitting file and getting Kf1..\n");
 	printf("Private Keys 1:\n");
 	unsigned char* Kf1;
-	Kf1 = malloc(33*sizeof(unsigned char));
-	printf("\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n%c\n", Kf1[0]);
-	printSHA256(Kf1);
+	Kf1 = (unsigned char*)malloc(33*sizeof(unsigned char));
+//	printf("\nOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n%c\n", Kf1[0]);
+//	printSHA256(Kf1);
 	DO_submit_file("test_file.txt", param, ks, cs, pairing, Kf1); // user 1
+printSHA256(Kf1);
+
 	printf("\n******************************************\nDO2: Submitting file and getting Kf2..\n");
-	printf("Private Keys 1:\n");
+	printf("Private Keys 2:\n");
 	unsigned char* Kf2;
-	Kf2 = malloc(33*sizeof(unsigned char));
+	Kf2 = (unsigned char*)malloc(33*sizeof(unsigned char));
 	DO_submit_file("test_file.txt", param, ks, cs, pairing, Kf2); // user 2
 
 	printf("\n******************************************\n\n");
@@ -59,7 +61,7 @@ int main(int argc, char* argv[]){
 	print_hex(Kf2);
 */
 	// compare keys
-	if(!strncmp(Kf1, Kf2, strlen(Kf1))){
+	if(!strcmp(Kf1, Kf2)){//strncmp(Kf1, Kf2, strlen(Kf1))){
 		printf("Keys are equal!\n");
 	} else{
 		printf("Keys are different!\n");

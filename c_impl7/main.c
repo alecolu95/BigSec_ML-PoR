@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-void print_hex(char* string);
+void print_hex(unsigned char* string);
 
 int main(int argc, char* argv[]){
 //int main(){
@@ -19,14 +19,20 @@ int main(int argc, char* argv[]){
 	S* cs = S_init(param);
 
 	printf("******************************************\nDO1: Submitting file and getting Kf1..\n");
-	char* Kf1 = DO_submit_file("test_file.txt", param, ks, cs); // user 1
+	unsigned char* Kf1 = (unsigned char*) malloc(1024*sizeof(unsigned char));
+	DO_submit_file("test_file.txt", param, ks, cs, Kf1); // user 1
 
-	printf("Kf1 (before Kf2): ");
+	if(Kf1 != NULL){
+/*	printf("Kf1 (before Kf2): ");
 	print_hex(Kf1);
 	printf("\n\n");
+*/	}
+	else
+		printf("Kf1 (before Kf2) is NULL!!");
 
 	printf("\n******************************************\nDO2: Submitting file and getting Kf2..\n");
-	char* Kf2 = DO_submit_file("test_file.txt", param, ks, cs); // user 2
+	unsigned char* Kf2 = (unsigned char*) malloc(1024*sizeof(unsigned char));
+	DO_submit_file("test_file.txt", param, ks, cs, Kf2); // user 2
 
 	printf("\n******************************************\n\n");
 	printf("================================\nComparing keys..\n");
@@ -58,10 +64,10 @@ int main(int argc, char* argv[]){
 	return 0;
 }
 
-void print_hex(char* string){
+void print_hex(unsigned char* string){
 	int i;
 	for (i = 0; i < strlen(string); i++) {
-		printf("%02x", string[i]);
+		printf("%02x", /*(uint8_t)*/string[i]);
 	}
 	printf("\n");
 }

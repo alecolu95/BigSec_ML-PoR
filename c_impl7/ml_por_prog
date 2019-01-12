@@ -5,7 +5,6 @@ import subprocess
 success = False
 while(success == False):
 	res = subprocess.check_output(['./ml_por', 'a.param'])
-	# look for valid solution, not empty
-	if(res.find("equal", 0, len(res)) != -1 and res.find("Kf1: \nKf2: \n", 0, len(res))):
+	if(res.find("equal", 0, len(res)) != -1):
 		success = True
 print(res)

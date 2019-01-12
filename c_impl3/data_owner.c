@@ -1,5 +1,5 @@
 #include "data_owner.h"
-#include "server.h"
+//#include "server.h"
 //#include <pbc.h>	//comment if included into server.h
 #include <math.h>
 #include <stdio.h>
@@ -17,7 +17,7 @@ char* my_read_file(char* filename);
 // TODO for debug purpose
 void print_hex2(char* string);
 
-char* DO_submit_file(char *filename, char* param_file){
+char* DO_submit_file(char *filename, char* param_file, S* ks, S* cs){//char* param_file){
 	// success or fail flag
 	int success = 0;
 	unsigned char* res;
@@ -51,10 +51,10 @@ char* DO_submit_file(char *filename, char* param_file){
 //printf("Done.\n\nServers initialization:\n");
 	// KS init
 //printf("- KS: ");
-	S* ks = S_init(pairing, gr1, gr2);
+//	S* ks = S_init(pairing, gr1, gr2);
 	// CS init
 //printf("Done.\n- CS: ");
-	S* cs = S_init(pairing, gr1, gr2);
+//	S* cs = S_init(pairing, gr1, gr2);
 
 //printf("Done.\n\n");
 
@@ -105,7 +105,7 @@ char* DO_submit_file(char *filename, char* param_file){
 
 //printf("Done.\nUnblinding with alpha.. ");
 	// unblind to derive signature
-	KP *ks_key_pair = get_public_key_pair(ks);
+	KP *ks_key_pair = get_public_key_pair(ks, gr1, gr2);
 //printf("init same\n");
 	element_init_same_as(s, s_signed);
 //printf("neg\n");
@@ -131,7 +131,7 @@ printf("OK!\n");//\nBlinding signature with random value beta.. ");
 
 //printf("Done.\nUnblinding with beta.. ");
 		// unblind to derive signature
-		KP *cs_key_pair = get_public_key_pair(cs);
+		KP *cs_key_pair = get_public_key_pair(cs, gr1, gr2);
         	element_init_same_as(c, c_tilde);
        		element_neg(beta, beta);              // beta = -beta
         	element_set(c, *element_blind(c_tilde, cs_key_pair->first, beta));
@@ -179,8 +179,8 @@ printf("Verifing CS signature.. ");
 	element_clear(s_signed);
 	element_clear(s);
 
-	server_free(ks);
-	server_free(cs);
+//	server_free(ks);
+//	server_free(cs);
 
 //	free(msg);
 
