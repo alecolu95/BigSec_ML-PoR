@@ -1,4 +1,0 @@
-build:
-	gcc -o ml_por *.c -I ~/.local/include/pbc -L ~/.local/lib -Wl,-rpath ~/.local/lib  -l pbc
-run:
-	./ml_por a.param
