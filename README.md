@@ -57,7 +57,7 @@ We used the **gmp-4.3.1**, already in the ***lib*** folder.
 
 
 
-## Implementation
+## IMPLEMENTATION 
 ### Introduction
 There are 2 versions of the implementation of the protocol, divided into 2 folders:
 - c_impl: simulating a 1-user interaction with the system and checking that the signatures verify;
