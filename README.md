@@ -54,7 +54,7 @@ We used the **gmp-4.3.1**, already in the ***lib*** folder.
 
 > Link for all older gmp's versions: https://ftp.gnu.org/gnu/gmp
 
- https://ftp.gnu.org/gnu/gmp
+
 
 
 ## Implementation
