@@ -3,6 +3,6 @@ build:
 run:
 	./ml_por a.param
 analysis:
-	./ml_por_analysis
+	./analyze #./ml_por_analysis
 prog:
 	./ml_por_prog

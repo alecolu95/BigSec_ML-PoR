@@ -137,8 +137,10 @@ void DO_submit_file(char *filename, pairing_t pairing, S* ks, S* cs, unsigned ch
 		//printf("FINAL KEY (HASHED): ");
 		//print_hex(hash_res);
 
-		res_bytes[0] = '\0';
-		strncat(res_bytes, hash_res, size);
+		//res_bytes[0] = '\0';
+		//strncat(res_bytes, hash_res, size);
+		memcpy(res_bytes, hash_res, 32);
+		res_bytes[32] = '\0';
 	} else {
 		res_bytes = NULL;
 	}
@@ -191,6 +193,19 @@ char* my_read_file(char* filename){
 
 	free(line);
 	return content;
+}
+
+// function to compare keys
+int cmp_keys(unsigned char* k1, unsigned char* k2){
+	int diff = 0;
+
+	for(int i = 0; i < 32 && !diff; i++){
+		if(k1[i] != k2[i]){
+			diff = 1;
+		}
+	}
+
+	return diff;
 }
 
 // function to print SHA256-hashed keys
