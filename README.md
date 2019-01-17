@@ -26,12 +26,6 @@ make
 sudo make install
 ```
 
-> Sources:
-> - https://crypto.stanford.edu/pbc/manual/ch01.html
-> - https://www.ubuntuupdates.org/package/core/precise/universe/base/libgmp3c2
-> - https://github.com/openssl/openssl
-> - http://voltar.org/pbcfiles/
-
 Then update the installed libraries by running:
 ```
 sudo ldconfig
@@ -39,12 +33,26 @@ sudo ldconfig
 
 Once you are done, everything should be ready.
 
+> Sources:
+> - https://crypto.stanford.edu/pbc/manual/ch01.html
+> - https://www.ubuntuupdates.org/package/core/precise/universe/base/libgmp3c2
+> - https://github.com/openssl/openssl
+> - http://voltar.org/pbcfiles/
+
 #### Error solving
 In case you get an error using the PBC library, try to copy the files from ***lib/all_pbc_files*** into ***/usr/local/include***.
+
 If still not working, try to run again:
 ```
 sudo ldconfig
 ```
+
+The setup setting have been tested on Ubuntu 18.04. While installing on Ubuntu 16.04, the installation required 2 additional libraries, running:
+```
+sudo apt install flex
+sudo apt install bison
+```
+
 
 > Source: https://github.com/blynn/pbc/tree/master/include
 
